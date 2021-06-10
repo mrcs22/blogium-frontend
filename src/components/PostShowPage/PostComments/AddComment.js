@@ -1,24 +1,44 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import axios from "axios";
+import { useState } from "react";
+import styled from "styled-components";
 
-import Button from '../../Button';
+import Button from "../../Button";
 
-export default function AddComment({ postId }) {
-  const [name, setName] = useState('');
-  const [content, setContent] = useState('');
+export default function AddComment({ postId, setComments }) {
+  const [name, setName] = useState("");
+  const [content, setContent] = useState("");
 
   function onAddCommentButtonClick() {
-    alert('No futuro isso vai adicionar o comentário :)');
+    const comment = {
+      author: name,
+      content,
+    };
 
-    setName('');
-    setContent('');
+    const req = axios.post(
+      `http://localhost:4000/posts/${postId}/comments`,
+      comment
+    );
+    req.then((res) => {
+      setComments(res.data);
+    });
+
+    setName("");
+    setContent("");
   }
 
   return (
     <>
       <Title>Add a comment</Title>
-      <Input placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
-      <CommentBox placeholder="Share your thoughts..." value={content} onChange={e => setContent(e.target.value)}></CommentBox>
+      <Input
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <CommentBox
+        placeholder="Share your thoughts..."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      ></CommentBox>
       <Button onClick={onAddCommentButtonClick}>Add Comment</Button>
     </>
   );
@@ -32,7 +52,7 @@ const Title = styled.h1`
 
 const Input = styled.input`
   padding-top: 5px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.3;
   letter-spacing: -0.015em;
   width: 100%;
@@ -55,7 +75,7 @@ const CommentBox = styled.textarea`
   border-bottom: 1px solid var(--color-devider-light_gray);
   padding: 0;
   padding-bottom: 10px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 20px;
   width: 100%;
   min-height: 120px;
